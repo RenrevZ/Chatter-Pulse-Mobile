@@ -38,17 +38,52 @@
         </ul>
 
 
-        <ion-modal :is-open="isModalOpen" @didDismiss="closeModal" ref="modal">
+        <ion-modal :is-open="isModalOpen" @didDismiss="closeModal" ref="modal" class="custom-modal">
           <ion-header>
             <ion-toolbar color="none">
               <ion-buttons  slot="start">
                 <ion-button @click="closeModal">Cancel</ion-button>
               </ion-buttons>
-              <ion-title>Start a message</ion-title>
+              <ion-title>Send a message</ion-title>
+              <ion-buttons  slot="end">
+                <ion-button @click="closeModal">Create</ion-button>
+              </ion-buttons>
             </ion-toolbar>
           </ion-header>
           <ion-content class="ion-padding"> 
-            This content was mounted as soon as the modal was created.
+            <div class="relative mb-4">
+              <input 
+                  type="text" 
+                  v-model="searchQuery"
+                  placeholder="Search for user..." 
+                  class="w-full bg-gray-800 text-white rounded-full py-3 px-4 pl-10"
+              >
+              <MagnifyingGlassIcon class="w-6 h-6 absolute left-3 top-3 text-gray-400" />
+            </div>
+            <div 
+              class="flex justify-around items-center px-3 py-3" 
+              v-for="item in items" 
+              :key="item"
+              @click="selectItem(item)"
+            >
+              <img 
+                :src="`https://picsum.photos/80/80?random=${item}`" 
+                :alt="`image-${item}`" 
+                class="w-12 h-12 rounded-full mr-4"
+              >
+              <div class="flex-grow">
+                <p class="font-semibold">User {{ item }}</p>
+              </div>
+              <div class="flex justify-center items-center">
+                <input 
+                  :checked="selectedItem === item" 
+                  type="radio" 
+                  :value="item" 
+                  name="default-radio" 
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+              </div>
+            </div>
           </ion-content>
         </ion-modal>
     </div>
@@ -58,13 +93,6 @@
 import { BellIcon,PencilIcon,MagnifyingGlassIcon,PlusIcon } from '@heroicons/vue/24/outline'
 import { actionSheetController,IonFab, IonFabButton,IonModal} from '@ionic/vue';
 import { peopleOutline, personOutline, searchOutline } from 'ionicons/icons';
-
-interface ActionSheetButton {
-  text: string;
-  subHeader?: string;
-  icon: string;
-  handler: () => void;
-}
 
 const isModalOpen = ref(false);
 
@@ -77,14 +105,16 @@ const closeModal = () => {
 };
 
 
-const createUserButton = (name: string, department: string, imageId: string): ActionSheetButton => ({
-  text: name,
-  subHeader: department,
-  icon: `https://picsum.photos/80/80?random=${imageId}`,
-  handler: () => {
-    console.log(`${name} clicked`);
-  }
-});
+// List of items
+const items = [1, 2, 3, 4, 5];
+
+// Selected item state
+const selectedItem = ref<number | null>(null);
+
+// Method to handle item selection
+const selectItem = (item: number) => {
+  selectedItem.value = item;
+}
 
 const messages = ref([
   {
@@ -137,29 +167,6 @@ const messages = ref([
     avatar: "https://picsum.photos/80/80?random=7"
   }
 ])
-
-const presentActionSheet = async () => {
-  const actionSheet = await actionSheetController.create({
-    header: 'Start a Chat',
-    cssClass: 'custom-action-sheet',
-    buttons: [
-      {
-        text: 'Search...',
-        icon: searchOutline,
-        handler: () => {
-          console.log('Search clicked');
-        }
-      },
-      createUserButton('Emelie Clarkson', 'Sales & Support', '64'),
-      createUserButton('Lynn Tanner', 'HR Department', '65'),
-      createUserButton('Chris Evans', 'Sales & Support', '66'),
-      createUserButton('Mike Jackson', 'IT Department', '67'),
-    ],
-  });
-
-  await actionSheet.present();
-};
-
 </script>
 
 <style>
