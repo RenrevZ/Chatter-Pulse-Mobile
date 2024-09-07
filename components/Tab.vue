@@ -26,44 +26,43 @@
         </ion-tabs>
     </ion-page>
 </template>
-<script setup>
-import { HomeIcon,UserCircleIcon,ChatBubbleOvalLeftEllipsisIcon,BellIcon } from '@heroicons/vue/24/outline'
+<script setup lang="ts">
+import { HomeIcon, UserCircleIcon, ChatBubbleOvalLeftEllipsisIcon, BellIcon } from '@heroicons/vue/24/outline'
 import { routes } from '@/enums/routes'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute();
 const router = useRouter();
-
 
 const tabs = ref([
   {
     name: 'Home',
     route: routes.FORUM,
     icon: HomeIcon,
-    isActive: route.fullPath === routes.FORUM,
+    isActive: route?.fullPath === routes.FORUM,
   },
   {
     name: 'Message',
     route: routes.MESSAGE,
     icon: ChatBubbleOvalLeftEllipsisIcon,
-    isActive: route.fullPath === routes.MESSAGE,
+    isActive: route?.fullPath === routes.MESSAGE,
   },
   {
     name: 'Notifications',
     route: routes.NOTIFICATIONS,
     icon: BellIcon,
-    isActive: route.fullPath === routes.NOTIFICATIONS,
+    isActive: route?.fullPath === routes.NOTIFICATIONS,
   },
   {
     name: 'Profile',
     route: routes.PROFILE,
     icon: UserCircleIcon,
-    isActive: route.fullPath === routes.PROFILE,
+    isActive: route?.fullPath === routes.PROFILE,
   },
 ]);
 
-
 watch(
-  () => route.fullPath,
+  () => route?.fullPath,
   (newPath) => {
     updateActiveTab(newPath);
   }
@@ -71,13 +70,11 @@ watch(
 
 function updateActiveTab(newPath) {
   tabs.value.forEach(tab => {
-    tab.isActive = (tab.route === newPath);
+    tab.isActive = newPath === tab.route;
   });
 }
 
-// Function to handle tab click
 function activateTab(tab) {
   router.push(tab.route);  // Navigate to the tab's route
-  updateActiveTab(tab.route);  // Update active state immediately
 }
 </script>

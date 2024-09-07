@@ -1,7 +1,7 @@
 <template>
   <ion-app>
     <ion-router-outlet />
-    <Tab />
+    <!-- <Tab /> -->
   </ion-app>
 </template>
 

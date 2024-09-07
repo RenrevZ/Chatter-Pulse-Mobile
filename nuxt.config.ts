@@ -10,5 +10,13 @@ export default defineNuxtConfig({
     },
   },
   modules: ['@nuxtjs/ionic'],
+  runtimeConfig: {
+    public: {
+      apiEndpoint: process.env.API_ENDPOINT || 'http://127.0.0.1:8000/api/'
+    }
+  },
+  plugins: [
+    '~/plugins/api.js'
+  ],
   ssr: false
 })

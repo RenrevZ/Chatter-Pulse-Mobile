@@ -167,6 +167,15 @@ const messages = ref([
     avatar: "https://picsum.photos/80/80?random=7"
   }
 ])
+
+const { data, status, error, refresh, clear } = await useAsyncData(
+    'conversations',
+    () => $fetch(`${useRuntimeConfig().public.apiEndpoint}/get-all-conversations`)
+  )
+
+
+console.log('data:',data)
+console.log('errro:',error.value)
 </script>
 
 <style>
